@@ -1,11 +1,11 @@
 # ─────────────────────────────────────────────────────────
-#  US Time Zone Clock  ·  Python / Flask  ·  Docker Image
+#  Time Zones - North America  ·  Python / Flask  ·  Docker Image
 #  HTML frontend  +  Python backend API  ·  Port 5000
 # ─────────────────────────────────────────────────────────
 FROM python:3.12-slim
 
-LABEL description="US Time Zone Clock – Flask backend + HTML frontend"
-LABEL version="2.0"
+LABEL description="Time Zones - North America – Flask backend + HTML frontend"
+LABEL version="2.1"
 
 # Create non-root user for security
 RUN useradd -m -u 1000 appuser
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY app.py .
-COPY static/ ./static/
+COPY index.html .
 
 # Switch to non-root user
 USER appuser
