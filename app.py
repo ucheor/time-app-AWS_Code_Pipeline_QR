@@ -3,7 +3,9 @@ from datetime import datetime
 import pytz
 import os
 
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 TIMEZONES = [
     {"abbr": "PST / PDT", "label": "Pacific Time",  "tz": "America/Los_Angeles", "offset": "UTC−8/−7"},
@@ -36,7 +38,7 @@ def get_times():
 
 @app.route("/")
 def index():
-    return send_from_directory("static", "index.html")
+    return send_from_directory(BASE_DIR, "index.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
