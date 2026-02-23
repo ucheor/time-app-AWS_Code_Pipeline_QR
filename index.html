@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Time Zones - North America</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f4f0e8;
+      --ink:      #1a1714;
+      --warm:     #c0392b;
+      --warm2:    #e67e22;
+      --surface:  #eceae2;
+      --border:   #d5d0c4;
+      --muted:    #8c8880;
+      --shadow:   rgba(26,23,20,0.1);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: riseUp 0.6s ease both;
+    }
+
+    .eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 0.6rem;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--warm);
+    }
+
+    .subtitle {
+      margin-top: 0.75rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    /* Python badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding: 0.3rem 0.75rem;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 2px;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #3eb489;
+      animation: pulse 2s infinite;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 980px;
+      box-shadow: 0 8px 40px var(--shadow), 0 2px 8px var(--shadow);
+    }
+
+    .card {
+      background: var(--bg);
+      padding: 2rem 1.75rem 2.25rem;
+      position: relative;
+      transition: background 0.2s;
+      animation: riseUp 0.6s ease both;
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+
+    .card:hover { background: var(--surface); }
+
+    /* Color accent bar per card */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .card:nth-child(1)::before { background: var(--warm); }
+    .card:nth-child(2)::before { background: #2980b9; }
+    .card:nth-child(3)::before { background: #27ae60; }
+    .card:nth-child(4)::before { background: var(--warm2); }
+
+    .card-abbr {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .card-label {
+      font-size: 1rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-time {
+      font-size: clamp(2.2rem, 3.5vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .card-time .sec {
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .card-time .ampm {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--warm);
+      margin-left: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+
+    .card-date {
+      margin-top: 0.6rem;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .card-offset {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.6rem;
+      color: var(--border);
+      letter-spacing: 0.1em;
+    }
+
+    .card:hover .card-offset { color: var(--muted); }
+
+    /* UTC strip */
+    .utc-strip {
+      width: 100%;
+      max-width: 980px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: riseUp 0.6s 0.5s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+
+    #utcTime { color: #3eb489; font-weight: 600; }
+
+    /* Loading skeleton */
+    .skeleton .card-time,
+    .skeleton .card-date,
+    .skeleton .card-label {
+      background: var(--border);
+      color: transparent;
+      border-radius: 2px;
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* API error state */
+    .error-msg {
+      color: var(--warm);
+      font-size: 0.7rem;
+      text-align: center;
+      padding: 1rem;
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Live Clock</div>
+  <h1>Time Zones<br/><em>North America</em></h1>
+  <p class="subtitle">Data served by Python &bull; Flask backend</p>
+  <div class="badge"><span class="badge-dot"></span> Python API · /api/times</div>
+</header>
+
+<div class="grid skeleton" id="grid">
+  <!-- Cards injected by JS -->
+  <div class="card"><div class="card-abbr">PST / PDT</div><div class="card-label">Pacific Time</div><div class="card-time">--:--:--</div><div class="card-date">Loading…</div></div>
+  <div class="card"><div class="card-abbr">MST / MDT</div><div class="card-label">Mountain Time</div><div class="card-time">--:--:--</div><div class="card-date">Loading…</div></div>
+  <div class="card"><div class="card-abbr">CST / CDT</div><div class="card-label">Central Time</div><div class="card-time">--:--:--</div><div class="card-date">Loading…</div></div>
+  <div class="card"><div class="card-abbr">EST / EDT</div><div class="card-label">Eastern Time</div><div class="card-time">--:--:--</div><div class="card-date">Loading…</div></div>
+</div>
+
+<div class="utc-strip">
+  <span>Coordinated Universal Time</span>
+  <span id="utcTime">--:--:-- UTC</span>
+</div>
+
+<script>
+  const grid = document.getElementById('grid');
+  const utcEl = document.getElementById('utcTime');
+  let initialized = false;
+
+  function buildGrid(zones) {
+    grid.classList.remove('skeleton');
+    grid.innerHTML = zones.map((z, i) => `
+      <div class="card">
+        <div class="card-abbr">${z.abbr}</div>
+        <div class="card-label">${z.label}</div>
+        <div class="card-time" id="time-${i}">
+          ${z.time.slice(0,5)}:<span class="sec">${z.time.slice(6)}</span>
+          <span class="ampm">${z.ampm}</span>
+        </div>
+        <div class="card-date" id="date-${i}">${z.date}</div>
+        <div class="card-offset">${z.offset}</div>
+      </div>
+    `).join('');
+  }
+
+  function updateGrid(zones) {
+    zones.forEach((z, i) => {
+      const timeEl = document.getElementById(`time-${i}`);
+      const dateEl = document.getElementById(`date-${i}`);
+      if (timeEl) {
+        timeEl.innerHTML = `${z.time.slice(0,5)}:<span class="sec">${z.time.slice(6)}</span><span class="ampm">${z.ampm}</span>`;
+      }
+      if (dateEl) dateEl.textContent = z.date;
+    });
+  }
+
+  async function fetchTimes() {
+    try {
+      const res = await fetch('/api/times');
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+
+      if (!initialized) {
+        buildGrid(data.zones);
+        initialized = true;
+      } else {
+        updateGrid(data.zones);
+      }
+      utcEl.textContent = data.utc;
+    } catch (err) {
+      if (!initialized) {
+        grid.innerHTML = `<div class="error-msg" style="grid-column:1/-1">⚠ Could not reach Python API — is Flask running?</div>`;
+      }
+    }
+  }
+
+  fetchTimes();
+  setInterval(fetchTimes, 1000);
+</script>
+</body>
+</html>
