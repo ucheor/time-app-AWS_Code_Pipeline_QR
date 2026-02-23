@@ -16,9 +16,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application files
-COPY app.py .
-COPY index.html .
+# Copy application files and set ownership
+COPY --chown=appuser:appuser app.py .
+COPY --chown=appuser:appuser requirements.txt .
+COPY --chown=appuser:appuser index.html .
 
 # Switch to non-root user
 USER appuser
