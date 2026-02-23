@@ -12,9 +12,9 @@ RUN useradd -m -u 1000 appuser
 
 WORKDIR /app
 
-# Install dependencies first (better layer caching)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# # Install dependencies first (better layer caching)
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY app.py .
